@@ -3,112 +3,163 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dev Fan Club | দেব ফ্যান ক্লাব</title>
+    <title>Dev Fan Club | SIAM </title>
     <style>
         * { box-sizing: border-box; }
         body, html {
             margin: 0; padding: 0;
-            font-family: 'Segoe UI', Arial, sans-serif;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             color: #fff; height: 100%; overflow-x: hidden;
+            background-color: #06060c;
         }
-        /* ব্যাকগ্রাউন্ড ভিডিও */
-        .video-background {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            z-index: -1; overflow: hidden; background-color: #000;
+        
+        /* হাইপার লেভেলের প্রিমিয়াম ব্যাকগ্রাউন্ড ইমেজ */
+        .bg-image {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -2;
+            background: url('https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=1920') no-repeat center center/cover;
+            filter: brightness(0.25) contrast(1.1);
         }
-        .video-background iframe {
-            position: absolute; top: 50%; left: 50%;
-            width: 100vw; height: 56.25vw; min-width: 100%; min-height: 100%;
-            transform: translate(-50%, -50%); pointer-events: none; opacity: 0.35;
+
+        /* নিয়ন ও থিম গ্লো ইফেক্ট */
+        .neon-glow {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1;
+            background: radial-gradient(circle at 50% 10%, rgba(255, 46, 99, 0.15) 0%, rgba(0,0,0,0) 60%),
+                        radial-gradient(circle at 10% 80%, rgba(0, 223, 252, 0.1) 0%, rgba(0,0,0,0) 50%);
+            pointer-events: none;
         }
+
         .content-overlay {
             position: relative; z-index: 1; min-height: 100vh;
-            background: rgba(0, 0, 0, 0.5); padding: 20px; text-align: center;
+            padding: 30px 20px; text-align: center;
         }
+
+        /* টপ নেভিগেশন বার */
+        .top-navbar {
+            display: flex; justify-content: space-between; align-items: center;
+            max-width: 1200px; margin: 0 auto 30px;
+            background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.08); padding: 12px 25px; border-radius: 50px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        /* রিয়েল-টাইম সার্চ বার */
+        .search-box { position: relative; display: flex; align-items: center; width: 40%; max-width: 350px; }
+        .search-box input {
+            width: 100%; padding: 10px 20px; border-radius: 25px;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            background: rgba(0, 0, 0, 0.4); color: #fff; font-size: 14px;
+            outline: none; transition: all 0.3s;
+        }
+        .search-box input:focus {
+            border-color: #ff2e63; box-shadow: 0 0 15px rgba(255, 46, 99, 0.4);
+        }
+
+        /* দেবের ছবিওয়ালা গোল বাতন */
+        .dev-profile-btn {
+            width: 50px; height: 50px; border-radius: 50%; border: 2px solid #ff2e63; cursor: pointer;
+            overflow: hidden; transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 0 15px rgba(255, 46, 99, 0.5);
+        }
+        .dev-profile-btn:hover { transform: scale(1.12); box-shadow: 0 0 25px #ff2e63; }
+        .dev-profile-btn img { width: 100%; height: 100%; object-fit: cover; }
+
         header {
-            background: linear-gradient(135deg, rgba(255, 65, 108, 0.8), rgba(255, 75, 43, 0.8));
-            padding: 20px; font-size: 24px; font-weight: bold; border-radius: 10px; margin-bottom: 30px;
+            font-size: 32px; font-weight: 800; max-width: 1200px; margin: 40px auto;
+            background: linear-gradient(45deg, #ff2e63, #00dffc);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 40px rgba(255, 46, 99, 0.2); letter-spacing: 1px;
         }
-        /* থাম্বনেইল গ্রিড */
+
+        /* কার্ড গ্রিড */
         .video-grid {
-            display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 25px; max-width: 1200px; margin: 0 auto;
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
+            gap: 30px; max-width: 1200px; margin: 0 auto;
         }
         .video-card {
-            background: rgba(20, 20, 20, 0.85); border-radius: 10px;
-            overflow: hidden; border: 1px solid #333; cursor: pointer;
-            transition: transform 0.3s, box-shadow 0.3s;
-            position: relative;
+            background: rgba(18, 18, 29, 0.6); border-radius: 16px; overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.03); cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+            position: relative; backdrop-filter: blur(12px);
         }
         .video-card:hover {
-            transform: translateY(-50px);
-            box-shadow: 0 8px 25px rgba(255, 75, 43, 0.4);
+            transform: translateY(-8px) scale(1.02); border-color: rgba(0, 223, 252, 0.4);
+            box-shadow: 0 15px 35px rgba(0, 223, 252, 0.15);
         }
-        .thumbnail-container {
-            position: relative; width: 100%; padding-top: 56.25%; /* 16:9 Aspect Ratio */
-        }
-        .thumbnail-container img {
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover;
-        }
-        /* প্লে বাটন ওভারলে */
+        .thumbnail-container { position: relative; width: 100%; padding-top: 56.25%; }
+        .thumbnail-container img { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; }
+        
         .play-overlay {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.3); display: flex; align-items: center; justify-content: center;
+            background: rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center;
             opacity: 0; transition: opacity 0.3s;
         }
         .video-card:hover .play-overlay { opacity: 1; }
         .play-btn {
-            font-size: 40px; background: #ff4b2b; color: white;
-            width: 60px; height: 60px; border-radius: 50%;
-            display: flex; align-items: center; justify-content: center;
-            box-shadow: 0 0 15px rgba(255,75,43,0.8);
+            font-size: 22px; background: linear-gradient(135deg, #00dffc, #008fa8); color: white;
+            width: 55px; height: 55px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            box-shadow: 0 0 25px rgba(0,223,252,0.5);
         }
-        .video-info { padding: 12px; text-align: left; }
-        .video-info h3 { margin: 0; font-size: 16px; color: #fff; text-overflow: ellipsis; overflow: hidden; white-space: nowrap; }
+        
+        .video-info { padding: 18px; text-align: left; }
+        .video-info h3 { margin: 0; font-size: 16px; color: #f1f1f1; font-weight: 600; text-overflow: ellipsis; overflow: hidden; white-space: nowrap; }
 
-        /* পপআপ (Modal) স্টাইল */
+        /* পপআপ মডাল সিস্টেম */
         .modal {
             display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.9); z-index: 100; align-items: center; justify-content: center;
+            background: rgba(4, 4, 8, 0.9); z-index: 100; align-items: center; justify-content: center;
+            backdrop-filter: blur(15px);
         }
         .modal-content {
-            position: relative; width: 90%; max-width: 800px; background: #000;
-            border-radius: 8px; overflow: hidden; border: 2px solid #ff4b2b;
+            position: relative; width: 90%; max-width: 850px; background: #0b0b12;
+            border-radius: 20px; overflow: hidden; border: 1px solid rgba(255, 46, 99, 0.2);
+            box-shadow: 0 0 50px rgba(255, 46, 99, 0.3);
         }
-        .modal-content iframe { width: 100%; height: 450px; border: none; display: block; }
-        .close-btn {
-            position: absolute; top: -40px; right: 0; color: #fff;
-            font-size: 30px; cursor: pointer; font-weight: bold;
+        .modal-content iframe { width: 100%; height: 480px; border: none; display: block; }
+        
+        /* উইকি বডি */
+        .wiki-body { padding: 30px; max-height: 70vh; overflow-y: auto; text-align: left; line-height: 1.7; }
+        .wiki-body h2 { margin-top: 0; color: #00dffc; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 10px; }
+        
+        .close-btn { position: absolute; top: 15px; right: 20px; color: #fff; font-size: 30px; cursor: pointer; z-index: 10; }
+        .close-btn:hover { color: #ff2e63; }
+        
+        @media (max-width: 768px) { 
+            .modal-content iframe { height: 260px; } 
+            .top-navbar { flex-direction: column; gap: 15px; border-radius: 20px; }
+            .search-box { width: 100%; }
         }
-        @media (max-width: 768px) { .modal-content iframe { height: 250px; } }
     </style>
 </head>
 <body>
 
-    <!-- ব্যাকগ্রাউন্ড লুপ ভিডিও -->
-    <div class="video-background">
-        <iframe src="https://www.youtube.com/embed/3v8v9qGv49A?autoplay=1&mute=1&loop=1&playlist=3v8v9qGv49A&controls=0&showinfo=0&rel=0" allow="autoplay"></iframe>
-    </div>
+    <!-- ব্যাকগ্রাউন্ড ইমেজ এবং গ্লো -->
+    <div class="bg-image"></div>
+    <div class="neon-glow"></div>
 
     <div class="content-overlay">
-        <header>🎬 দেব ফ্যান ক্লাব - থাম্বনেইল গ্যালারি 🎵</header>
         
+        <!-- টপ নেভিগেশন বার -->
+        <div class="top-navbar">
+            <div class="search-box">
+                <input type="text" id="searchInput" placeholder="গান খুঁজুন..." onkeyup="searchSongs()">
+            </div>
+            
+            <div class="dev-profile-btn" onclick="openWiki()" title="দেব এর জীবনী">
+                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR6-1P3uNqgN_vKox8M-2r66f7O93nK_EisbQ&s" alt="Dev">
+            </div>
+        </div>
+
+        <header>DEV FAN CLUB — THE SUPERSTAR</header>
+        
+        <!-- গানগুলোর গ্রিড লিস্ট -->
         <div class="video-grid" id="video-grid">
             <!-- SONGS_START -->
-            <div class="video-card" onclick="openPlayer('3JVvmxH9wsw')">
-                <div class="thumbnail-container">
-                    <img src="https://img.youtube.com/vi/3JVvmxH9wsw/maxresdefault.jpg" alt="paglu">
-                    <div class="play-overlay"><div class="play-btn">▶</div></div>
-                </div>
-                <div class="video-info">
-                    <h3>paglu</h3>
-                </div>
-            </div> 
+            
             <!-- SONGS_END -->
         </div>
     </div>
 
-    <!-- ভিডিও প্লেয়ার পপআপ বক্স -->
+    <!-- পপআপ ভিডিও প্লেয়ার মডাল -->
     <div class="modal" id="videoModal" onclick="closePlayer()">
         <div class="modal-content" onclick="event.stopPropagation()">
             <span class="close-btn" onclick="closePlayer()">&times;</span>
@@ -116,19 +167,46 @@
         </div>
     </div>
 
+    <!-- দেব এর উইকিপিডিয়া তথ্যের মডাল -->
+    <div class="modal" id="wikiModal" onclick="closeWiki()">
+        <div class="modal-content" onclick="event.stopPropagation()" style="max-width: 600px;">
+            <span class="close-btn" onclick="closeWiki()">&times;</span>
+            <div class="wiki-body">
+                <h2>দীপক অধিকারী (দেব)</h2>
+                <p><strong>দেব</strong> নামে পরিচিত <strong>দীপক অধিকারী</strong> (জন্ম: ২৫ ডিসেম্বর ১৯৮২) একজন জনপ্রিয় ভারতীয় বাঙালি চলচ্চিত্র অভিনেতা, প্রযোজক এবং রাজনীতিবিদ। তিনি বর্তমানে ভারতীয় বাংলা চলচ্চিত্রের অন্যতম শীর্ষ এবং সবচেয়ে প্রভাবশালী সুপারস্টার।</p>
+                <p>২০০৬ সালে 'অগ্নিশপথ' চলচ্চিত্রের মাধ্যমে তাঁর অভিনয় জীবন শুরু হয়। এরপর 'আই লাভ ইউ', 'চ্যালেঞ্জ', 'পাগলু', 'চাঁদের পাহাড়' এবং 'আমাজন অভিযান'-এর মতো চলচ্চিত্র উপহার দিয়ে তিনি কোটি ভক্তের হৃদয়ে জায়গা করে নেন। অভিনয়ের পাশাপাশি তিনি একজন সংসদ সদস্য (MP) হিসেবেও দায়িত্ব পালন করছেন।</p>
+                <p style="color: #666; font-size: 13px; margin-top: 20px;">উৎস: উইকিপিডিয়া মুক্ত বিশ্বকোষ</p>
+            </div>
+        </div>
+    </div>
+
     <script>
+        // রিয়েল-টাইম সার্চ ফাংশন
+        function searchSongs() {
+            const input = document.getElementById('searchInput').value.toLowerCase();
+            const cards = document.getElementsByClassName('video-card');
+            for (let i = 0; i < cards.length; i++) {
+                let title = cards[i].getElementsByTagName('h3')[0].innerText.toLowerCase();
+                cards[i].style.display = title.includes(input) ? "" : "none";
+            }
+        }
+
+        // ভিডিও প্লেয়ার কন্ট্রোল
         function openPlayer(videoId) {
             const modal = document.getElementById('videoModal');
             const iframe = document.getElementById('popupIframe');
             iframe.src = `https://www.youtube.com/embed/${videoId}?autoplay=1`;
             modal.style.display = 'flex';
         }
+
         function closePlayer() {
-            const modal = document.getElementById('videoModal');
-            const iframe = document.getElementById('popupIframe');
-            iframe.src = ''; // ভিডিও স্টপ করার জন্য লিংক খালি করা
-            modal.style.display = 'none';
+            document.getElementById('videoModal').style.display = 'none';
+            document.getElementById('popupIframe').src = '';
         }
+
+        // উইকি মডাল কন্ট্রোল
+        function openWiki() { document.getElementById('wikiModal').style.display = 'flex'; }
+        function closeWiki() { document.getElementById('wikiModal').style.display = 'none'; }
     </script>
 </body>
 </html>
