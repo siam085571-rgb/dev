@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dev Fan Club | দেব ফ্যান ক্লাব</title>
+    <style>
+        * { box-sizing: border-box; }
+        body, html {
+            margin: 0; padding: 0;
+            font-family: 'Segoe UI', Arial, sans-serif;
+            color: #fff; height: 100%; overflow-x: hidden;
+        }
+        /* ব্যাকগ্রাউন্ড ভিডিও */
+        .video-background {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            z-index: -1; overflow: hidden; background-color: #000;
+        }
+        .video-background iframe {
+            position: absolute; top: 50%; left: 50%;
+            width: 100vw; height: 56.25vw; min-width: 100%; min-height: 100%;
+            transform: translate(-50%, -50%); pointer-events: none; opacity: 0.35;
+        }
+        .content-overlay {
+            position: relative; z-index: 1; min-height: 100vh;
+            background: rgba(0, 0, 0, 0.5); padding: 20px; text-align: center;
+        }
+        header {
+            background: linear-gradient(135deg, rgba(255, 65, 108, 0.8), rgba(255, 75, 43, 0.8));
+            padding: 20px; font-size: 24px; font-weight: bold; border-radius: 10px; margin-bottom: 30px;
+        }
+        /* থাম্বনেইল গ্রিড */
+        .video-grid {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px; max-width: 1200px; margin: 0 auto;
+        }
+        .video-card {
+            background: rgba(20, 20, 20, 0.85); border-radius: 10px;
+            overflow: hidden; border: 1px solid #333; cursor: pointer;
+            transition: transform 0.3s, box-shadow 0.3s;
+            position: relative;
+        }
+        .video-card:hover {
+            transform: translateY(-50px);
+            box-shadow: 0 8px 25px rgba(255, 75, 43, 0.4);
+        }
+        .thumbnail-container {
+            position: relative; width: 100%; padding-top: 56.25%; /* 16:9 Aspect Ratio */
+        }
+        .thumbnail-container img {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover;
+        }
+        /* প্লে বাটন ওভারলে */
+        .play-overlay {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.3); display: flex; align-items: center; justify-content: center;
+            opacity: 0; transition: opacity 0.3s;
+        }
+        .video-card:hover .play-overlay { opacity: 1; }
+        .play-btn {
+            font-size: 40px; background: #ff4b2b; color: white;
+            width: 60px; height: 60px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            box-shadow: 0 0 15px rgba(255,75,43,0.8);
+        }
+        .video-info { padding: 12px; text-align: left; }
+        .video-info h3 { margin: 0; font-size: 16px; color: #fff; text-overflow: ellipsis; overflow: hidden; white-space: nowrap; }
+
+        /* পপআপ (Modal) স্টাইল */
+        .modal {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.9); z-index: 100; align-items: center; justify-content: center;
+        }
+        .modal-content {
+            position: relative; width: 90%; max-width: 800px; background: #000;
+            border-radius: 8px; overflow: hidden; border: 2px solid #ff4b2b;
+        }
+        .modal-content iframe { width: 100%; height: 450px; border: none; display: block; }
+        .close-btn {
+            position: absolute; top: -40px; right: 0; color: #fff;
+            font-size: 30px; cursor: pointer; font-weight: bold;
+        }
+        @media (max-width: 768px) { .modal-content iframe { height: 250px; } }
+    </style>
+</head>
+<body>
+
+    <!-- ব্যাকগ্রাউন্ড লুপ ভিডিও -->
+    <div class="video-background">
+        <iframe src="https://www.youtube.com/embed/3v8v9qGv49A?autoplay=1&mute=1&loop=1&playlist=3v8v9qGv49A&controls=0&showinfo=0&rel=0" allow="autoplay"></iframe>
+    </div>
+
+    <div class="content-overlay">
+        <header>🎬 দেব ফ্যান ক্লাব - থাম্বনেইল গ্যালারি 🎵</header>
+        
+        <div class="video-grid" id="video-grid">
+            <!-- SONGS_START -->
+            <div class="video-card" onclick="openPlayer('3v8v9qGv49A')">
+                <div class="thumbnail-container">
+                    <img src="https://img.youtube.com/vi/3v8v9qGv49A/maxresdefault.jpg" alt="পাগলু">
+                    <div class="play-overlay"><div class="play-btn">▶</div></div>
+                </div>
+                <div class="video-info">
+                    <h3>পাগলু টাইটেল ট্র্যাক</h3>
+                </div>
+            </div>
+            <!-- SONGS_END -->
+        </div>
+    </div>
+
+    <!-- ভিডিও প্লেয়ার পপআপ বক্স -->
+    <div class="modal" id="videoModal" onclick="closePlayer()">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <span class="close-btn" onclick="closePlayer()">&times;</span>
+            <iframe id="popupIframe" src="" allow="autoplay; fullscreen" allowfullscreen></iframe>
+        </div>
+    </div>
+
+    <script>
+        function openPlayer(videoId) {
+            const modal = document.getElementById('videoModal');
+            const iframe = document.getElementById('popupIframe');
+            iframe.src = `https://www.youtube.com/embed/${videoId}?autoplay=1`;
+            modal.style.display = 'flex';
+        }
+        function closePlayer() {
+            const modal = document.getElementById('videoModal');
+            const iframe = document.getElementById('popupIframe');
+            iframe.src = ''; // ভিডিও স্টপ করার জন্য লিংক খালি করা
+            modal.style.display = 'none';
+        }
+    </script>
+</body>
+</html>
